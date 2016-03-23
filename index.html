@@ -3,21 +3,21 @@
     <head>
         <meta charset="utf-8">
         <title>Awful jokes</title>
+        <script src="jquery.min.js"></script>
         <script>
-            fetch('http://localhost:1234/jokes')
-                .then((response) => response.json())
-                .then((json) => populatePage(json.jokes));
+            $.getJSON('http://localhost:1234/jokes', function (response) {
+                populatePage(response.jokes);
+            });
 
             function populatePage(jokes) {
-                let markup = jokes.map((joke) => {
-                    return `
-                        <dl>
-                            <dt>${joke.question}</dt>
-                            <dl>${joke.answer}</dl>
-                        </dl>`;
+                var markup = jokes.map(function (joke) {
+                    return '<dl>' +
+                            '<dt>' + joke.question + '</dt>' +
+                            '<dl>' + joke.answer + '</dl>' +
+                        '</dl>';
                 });
 
-                document.body.insertAdjacentHTML('afterbegin', markup.join('<br>'));
+                document.body.innerHTML = markup.join('<br>');
             }
         </script>
     </head>
