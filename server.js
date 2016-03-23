@@ -1,19 +1,14 @@
 'use strict';
 
-let cheerio = require('cheerio');
+let cheerio   = require('cheerio'),
+    fetch     = require('node-fetch'),
+    restify   = require('restify'),
 
-let fetch = require('node-fetch');
+    BAD_JOKES = {'jokes': []},
 
-let restify = require('restify');
+    server    = restify.createServer();
 
-let server = restify.createServer();
-
-let BAD_JOKES = { 'jokes': []};
-
-function respond(req, res, next) {
-    res.json(BAD_JOKES);
-    next();
-}
+getRinkworksJokes();
 
 server.get('/jokes', respond);
 server.head('/jokes', respond);
@@ -22,20 +17,26 @@ server.listen(1234, function() {
     console.log('%s listening at %s', server.name, server.url);
 });
 
-fetch('http://www.rinkworks.com/jokes/').then(function (response) {
-  return response.text();
-})
-.then(function (text) {
-  let parsedText = cheerio.load(text);
+function getRinkworksJokes() {
+    fetch('http://www.rinkworks.com/jokes/').then(function (response) {
+        return response.text();
+    })
+    .then(function (text) {
+        let parsedText = cheerio.load(text);
 
-  BAD_JOKES.jokes = getJokes(parsedText);
-})
-.catch(function (err) {
-    console.error(err);
-})
+        BAD_JOKES.jokes = BAD_JOKES.jokes.concat(parseJokes(parsedText));
+    })
+    .catch(function (err) {
+        console.error(err);
+    });
+}
 
+function respond(req, res, next) {
+    res.json(BAD_JOKES);
+    next();
+}
 
-function getJokes(DOM) {
+function parseJokes(DOM) {
     let jokes = DOM('.no ul').map(function (i, joke) {
 
         return joke.children.filter(function (jokeInner) {
