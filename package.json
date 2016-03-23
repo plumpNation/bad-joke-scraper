@@ -8,7 +8,7 @@
     "start": "node server.js"
   },
   "author": "",
-  "license": "ISC",
+  "license": "MIT",
   "dependencies": {
     "cheerio": "^0.20.0",
     "node-fetch": "^1.4.1"
