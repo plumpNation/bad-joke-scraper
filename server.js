@@ -10,6 +10,8 @@ let cheerio   = require('cheerio'),
 
 getRinkworksJokes();
 
+server.use(restify.CORS());
+
 server.get('/jokes', respond);
 server.head('/jokes', respond);
 

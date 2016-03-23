@@ -1,0 +1,27 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <meta charset="utf-8">
+        <title>Awful jokes</title>
+        <script>
+            fetch('http://localhost:1234/jokes')
+                .then((response) => response.json())
+                .then((json) => populatePage(json.jokes));
+
+            function populatePage(jokes) {
+                let markup = jokes.map((joke) => {
+                    return `
+                        <dl>
+                            <dt>${joke.question}</dt>
+                            <dl>${joke.answer}</dl>
+                        </dl>`;
+                });
+
+                document.body.insertAdjacentHTML('afterbegin', markup.join('<br>'));
+            }
+        </script>
+    </head>
+    <body>
+
+    </body>
+</html>
